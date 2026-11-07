@@ -97,6 +97,7 @@ function person(o) {
   } else {
     ctx.fillStyle = 'rgba(255,255,255,.85)'; poly([-34, -486, 34, -486, 22, -460, -22, -460]);
   }
+  if (o.patch) { ctx.fillStyle = o.patch; ellipse(-58, -420, 20, 20); ctx.fillStyle = '#fff'; ellipse(-58, -420, 7, 7); ctx.fillStyle = o.patch; rr(-108, -456, 22, 10, 3); }
   if (arms === 'umbrella') arm(96, -440, 122, -352, 26, -376);
   if (arms === 'teddy') {
     ctx.save(); ctx.translate(0, -350);
@@ -196,6 +197,7 @@ const CAST = {
   gordeev: { skin: '#e4b58f', hair: '#6d6d74', hairStyle: 'bald', coat: '#4a4f5c', tie: '#20324f', glasses: true, shirt: '#f2f2f2' },
   alisa: { skin: '#f1c3a0', hair: '#c26a2a', hairStyle: 'pigtails', coat: '#f2b631', dress: true, hem: -170, pants: '#f1c3a0', blush: true, hs: 1.35, arms: 'teddy' },
 };
+CAST.max = { skin: '#e3ae88', hair: '#3b2416', hairStyle: 'messy', coat: '#dfe3ea', shirt: '#c9ced8', pants: '#cfd4dd', hem: -60, patch: '#ef6a2a', eye: '#3a5a7a' };
 const as = (who, extra) => Object.assign({}, CAST[who], extra);
 
 // ---------- титры ----------
@@ -224,6 +226,12 @@ function caption(text, t, a, b, y = 1330, opt = {}) {
   const bw = Math.max(...widths) + 64;
   ctx.globalAlpha = alpha; ctx.translate(0, (1 - ap) * 24);
   ctx.fillStyle = 'rgba(8,8,14,.62)'; rr(W / 2 - bw / 2, y - bh / 2, bw, bh, 26);
+  if (opt.tag) {
+    ctx.font = '800 30px Montserrat'; const tw = ctx.measureText(opt.tag.text).width + 36;
+    ctx.fillStyle = opt.tag.color; rr(W / 2 - bw / 2 + 18, y - bh / 2 - 26, tw, 46, 23);
+    ctx.fillStyle = '#0c0c12'; ctx.fillText(opt.tag.text, W / 2 - bw / 2 + 36, y - bh / 2 - 2);
+    ctx.font = `800 ${size}px Montserrat`;
+  }
   lines.forEach((l, li) => {
     let x = W / 2 - widths[li] / 2; const ly = y - bh / 2 + 18 + lh * (li + .5);
     l.forEach((wd, i) => {
@@ -277,4 +285,20 @@ function runTimeline(scenes, total) {
     fadeBlack(Math.max(1 - lt / (sc.fadeIn ?? .25), (lt - (dur - (sc.fadeOut ?? .2))) / (sc.fadeOut ?? .2)));
     return cv.toDataURL('image/jpeg', .92);
   };
+}
+
+// ИИ «ЭХО»: круглый «глаз» на панели. talk 0..1 — пульсация при речи, red — сбой.
+function echoEye(x, y, r, t, talk = 0, red = false) {
+  const c = red ? '255,60,70' : '80,220,255';
+  ctx.save(); ctx.translate(x, y);
+  ctx.fillStyle = '#1a1f29'; ellipse(0, 0, r * 1.25, r * 1.25);
+  ctx.strokeStyle = '#3a4252'; ctx.lineWidth = r * .08; ctx.beginPath(); ctx.arc(0, 0, r * 1.18, 0, Math.PI * 2); ctx.stroke();
+  ctx.fillStyle = '#05070b'; ellipse(0, 0, r, r);
+  const pulse = 1 + talk * (.08 + .06 * Math.sin(t * 38));
+  glow(0, 0, r * 2.2 * pulse, `rgba(${c},.45)`);
+  ctx.strokeStyle = `rgba(${c},.9)`; ctx.lineWidth = r * .06;
+  for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(0, 0, r * (.85 - i * .2) * pulse, t * (i % 2 ? -1 : 1) * .8 + i, t * (i % 2 ? -1 : 1) * .8 + i + Math.PI * 1.3); ctx.stroke(); }
+  ctx.fillStyle = `rgba(${c},1)`; ellipse(0, 0, r * .22 * pulse, r * .22 * pulse);
+  ctx.fillStyle = 'rgba(255,255,255,.9)'; ellipse(-r * .07, -r * .07, r * .07, r * .07);
+  ctx.restore();
 }
