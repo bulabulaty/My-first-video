@@ -129,6 +129,17 @@ function person(o) {
     poly([-60, -598, -58, -560, -46, -578, -36, -548, -24, -574, -10, -546, 4, -572, 18, -548, 30, -574, 44, -552, 52, -578, 60, -556, 60, -600]);
     poly([-40, -630, -30, -648, -16, -634]); poly([-6, -636, 8, -652, 20, -634]); poly([24, -630, 40, -642, 44, -618]);
     rr(-60, -600, 10, 50, 5); rr(50, -600, 10, 50, 5);
+  } else if (hst === 'swept') {
+    // аккуратная стрижка с объёмом и зачёсом набок
+    ctx.beginPath(); ctx.moveTo(-58, -566); ctx.quadraticCurveTo(-66, -646, -4, -652); ctx.quadraticCurveTo(62, -652, 62, -580);
+    ctx.lineTo(56, -566); ctx.quadraticCurveTo(48, -598, 22, -598); ctx.quadraticCurveTo(-2, -600, -20, -588);
+    ctx.quadraticCurveTo(-38, -578, -50, -590); ctx.lineTo(-52, -566); ctx.closePath(); ctx.fill();
+    rr(-58, -600, 9, 36, 4); rr(49, -600, 9, 34, 4);
+    ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.lineWidth = 5; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(-34, -628); ctx.quadraticCurveTo(0, -646, 34, -630); ctx.stroke();
+    ctx.strokeStyle = 'rgba(0,0,0,.14)'; ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.moveTo(-22, -640); ctx.quadraticCurveTo(-8, -612, 14, -602); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(10, -646); ctx.quadraticCurveTo(28, -620, 44, -604); ctx.stroke();
   } else if (hst === 'slick') {
     ellipse(0, -600, 58, 36); rr(-58, -604, 12, 48, 6); rr(46, -604, 12, 48, 6);
     ctx.strokeStyle = 'rgba(255,255,255,.25)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-22, -630); ctx.quadraticCurveTo(-30, -608, -26, -590); ctx.stroke();
@@ -197,7 +208,7 @@ const CAST = {
   gordeev: { skin: '#e4b58f', hair: '#6d6d74', hairStyle: 'bald', coat: '#4a4f5c', tie: '#20324f', glasses: true, shirt: '#f2f2f2' },
   alisa: { skin: '#f1c3a0', hair: '#c26a2a', hairStyle: 'pigtails', coat: '#f2b631', dress: true, hem: -170, pants: '#f1c3a0', blush: true, hs: 1.35, arms: 'teddy' },
 };
-CAST.max = { skin: '#e3ae88', hair: '#3b2416', hairStyle: 'messy', coat: '#dfe3ea', shirt: '#c9ced8', pants: '#cfd4dd', hem: -60, patch: '#ef6a2a', eye: '#3a5a7a' };
+CAST.max = { skin: '#e3ae88', hair: '#e6c26a', hairStyle: 'swept', browColor: '#b08a3e', coat: '#dfe3ea', shirt: '#c9ced8', pants: '#cfd4dd', hem: -60, patch: '#ef6a2a', eye: '#3a5a7a' };
 const as = (who, extra) => Object.assign({}, CAST[who], extra);
 
 // ---------- титры ----------
